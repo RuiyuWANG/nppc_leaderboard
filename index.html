@@ -91,43 +91,45 @@
       </style>
       <script>
         function sortTable(colIndex, header = null) {
-          const table = document.getElementById("leaderboard");
-          let switching = true;
-          let dir = "asc";
-          let rows = table.rows;
-          if (header && header.dataset.sort === "asc") {
-            dir = "desc";
-            header.dataset.sort = "desc";
-          } else if (header) {
-            header.dataset.sort = "asc";
-          }
-    
-          while (switching) {
-            switching = false;
-            let shouldSwitch;
-            for (let i = 1; i < rows.length - 1; i++) {
-              let x = rows[i].getElementsByTagName("td")[colIndex];
-              let y = rows[i + 1].getElementsByTagName("td")[colIndex];
-              let xVal = x.innerText.toLowerCase();
-              let yVal = y.innerText.toLowerCase();
-    
-              if (!isNaN(xVal) && !isNaN(yVal)) {
-                xVal = parseFloat(xVal);
-                yVal = parseFloat(yVal);
+            const table = document.getElementById("leaderboard");
+            const rows = Array.from(table.rows).slice(1); // skip header
+            const isAsc = !(header.dataset.sort === "asc");
+          
+            // Reset all headers
+            const allHeaders = table.querySelectorAll("th");
+            allHeaders.forEach(th => {
+              th.dataset.sort = "none";
+              const arrow = th.querySelector(".arrow");
+              if (arrow) arrow.textContent = "↕"; // neutral
+            });
+          
+            // Update current header sort direction and arrow
+            header.dataset.sort = isAsc ? "asc" : "desc";
+            const arrow = header.querySelector(".arrow");
+            if (arrow) arrow.textContent = isAsc ? "▲" : "▼";
+          
+            // Sort the rows
+            rows.sort((a, b) => {
+              let x = a.cells[colIndex].innerText.trim().toLowerCase();
+              let y = b.cells[colIndex].innerText.trim().toLowerCase();
+          
+              const xNum = parseFloat(x);
+              const yNum = parseFloat(y);
+          
+              if (!isNaN(xNum) && !isNaN(yNum)) {
+                x = xNum;
+                y = yNum;
               }
-    
-              if ((dir === "asc" && xVal > yVal) || (dir === "desc" && xVal < yVal)) {
-                shouldSwitch = true;
-                break;
-              }
-            }
-    
-            if (shouldSwitch) {
-              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-              switching = true;
-            }
+          
+              return isAsc ? (x > y ? 1 : -1) : (x < y ? 1 : -1);
+            });
+          
+            // Reattach sorted rows
+            const tbody = table.tBodies[0];
+            rows.forEach(row => tbody.appendChild(row));
           }
-        }
+          
+          
     
         function searchTable() {
           const input = document.getElementById("searchInput").value.toLowerCase();
@@ -140,17 +142,72 @@
         }
     
         function toggleColumn(colIndex) {
-          const table = document.getElementById("leaderboard");
-          const rows = table.rows;
-    
-          for (let i = 0; i < rows.length; i++) {
-            const cell = rows[i].cells[colIndex];
-            if (cell) {
-              cell.style.display = cell.style.display === "none" ? "" : "none";
+            const table = document.getElementById("leaderboard");
+            const rows = table.rows;
+        
+            for (let i = 0; i < rows.length; i++) {
+              const cell = rows[i].cells[colIndex];
+              if (cell) {
+                const currentDisplay = window.getComputedStyle(cell).display;
+                cell.style.display = currentDisplay === "none" ? "" : "none";
+              }
             }
           }
+        
+        function applyInitialColumnVisibility() {
+        document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
+            const col = parseInt(checkbox.dataset.col);
+            if (!checkbox.checked) {
+            toggleColumn(col);  // hide column if not checked on load
+            }
+        });
         }
+        
+        window.onload = applyInitialColumnVisibility;
       </script>
+      <script>
+        function applyModelFilters() {
+          const rows = document.querySelectorAll("#leaderboard tbody tr");
+          const openSourceFilters = [];
+          const reasoningFilters = [];
+      
+          // Read Open-Source filter selections
+          if (document.getElementById("open-source-yes").checked) {
+            openSourceFilters.push("open-source");
+          }
+          if (document.getElementById("proprietary-yes").checked) {
+            openSourceFilters.push("proprietary");
+          }
+      
+          // Read Reasoning filter selections
+          if (document.getElementById("reasoning-yes").checked) {
+            reasoningFilters.push("reasoning");
+          }
+          if (document.getElementById("vanilla-yes").checked) {
+            reasoningFilters.push("non-reasoning");
+          }
+      
+          rows.forEach(row => {
+            const cells = row.querySelectorAll("td");
+            const openSourceText = cells[cells.length - 3]?.innerText.trim().toLowerCase(); // e.g., "open-source"
+            const reasoningText = cells[cells.length - 2]?.innerText.trim().toLowerCase();  // e.g., "reasoning"
+      
+            const openMatch = openSourceFilters.includes(openSourceText);
+            const reasoningMatch = reasoningFilters.includes(reasoningText);
+      
+            row.style.display = (openMatch && reasoningMatch) ? "" : "none";
+          });
+        }
+      
+        // Attach event listeners to filters
+        document.addEventListener("DOMContentLoaded", () => {
+          const filterCheckboxes = document.querySelectorAll(
+            "#open-source-yes, #proprietary-yes, #reasoning-yes, #vanilla-yes"
+          );
+          filterCheckboxes.forEach(cb => cb.addEventListener("change", applyModelFilters));
+          applyModelFilters();  // Run once on load
+        });
+      </script>      
   </head>
   <body>
       <section style="background-color: var(--dark_accent_color)">
@@ -221,13 +278,6 @@
               <div class="filter-section-item" style="margin: 0;">
                 <!-- Searching -->
                 <div class="search-section content-box" style="margin: 0;">
-                  <!-- <div class="search-section-item">
-                    <h3>Search:</h3>
-                  </div>
-                  <div class="search-section-item">
-                    <input type="text" id="searchInput" placeholder="">
-                    <button class="btn-radius" type="button" onclick="searchTable()">Search</button>
-                  </div> -->
                   <div class="search-section content-box">
                     <h3>Search:</h3>
                     <input type="text" id="searchInput" placeholder="Type to search...">
@@ -241,15 +291,6 @@
                       <h3>Select Columns to Display:</h3>
                     </div>
                     <div class="column-select-bottom">
-                      <!-- <label for="date">
-                        <input type="checkbox" class="custom-checkbox" id="date" checked onclick="toggleColumn(4)">Date
-                      </label>
-                      <label for="open - source">
-                        <input type="checkbox" class="custom-checkbox" id="open-source" checked onclick="toggleColumn(-4)">Open-source
-                      </label>
-                      <label for="reasoning">
-                        <input type="checkbox" class="custom-checkbox" id="reasoning" checked onclick="toggleColumn(-3)">Reasoning
-                      </label> -->
                       <label><input type="checkbox" class="custom-checkbox" data-col="3" checked onclick="toggleColumn(3)"> Date</label>
                       <label><input type="checkbox" class="custom-checkbox" data-col="16" checked onclick="toggleColumn(16)"> Open-source</label>
                       <label><input type="checkbox" class="custom-checkbox" data-col="17" checked onclick="toggleColumn(17)"> Reasoning</label>
@@ -264,10 +305,10 @@
                   <div>
                     <h4>Open-Source?</h4>
                     <label for="open-source-yes" class="label-radius">
-                      <input type="checkbox" id="open-source-yes" data-label="-4" value="open-source" checked>True
+                      <input type="checkbox" id="open-source-yes" data-label="-3" value="open-source" checked>True
                     </label>
                     <label for="proprietary-yes" class="label-radius">
-                      <input type="checkbox" id="proprietary-yes" data-label="-4" value="proprietary" checked>False
+                      <input type="checkbox" id="proprietary-yes" data-label="-3" value="proprietary" checked>False
                     </label>
                   </div>
                 </div>
@@ -275,21 +316,16 @@
                   <div>
                     <h4 for="reasoning-filter">Reasoning?</h4>
                     <label for="reasoning-yes" class="label-radius">
-                      <input type="checkbox" id="reasoning-yes" data-label="-3" value="Reasoning" checked>True
+                      <input type="checkbox" id="reasoning-yes" data-label="-2" value="reasoning" checked>True
                     </label>
                     <label for="vanilla-yes" class="label-radius">
-                      <input type="checkbox" id="vanilla-yes" data-label="-3" value="Vanilla" checked>False
+                      <input type="checkbox" id="vanilla-yes" data-label="-2" value="non-reasoning" checked>False
                     </label>
                   </div>
                 </div>
                 
               </div>
             </div>
-            <!-- <ul class="tab">
-              <li><button id="tab-test" class="tablinks" data-leaderboard="Main">Main</button></li>
-              <li><button id="tab-lite" class="tablinks" data-leaderboard="Text">Text</button></li>
-              <li><button id="tab-verified" class="tablinks" data-leaderboard="MM">MM</button></li>
-            </ul> -->
             <!-- Leaderboard Main -->
             <div class="tabcontent" style="display: block" id="leaderboard-Main">
               <table class="table scrollable" data-header-starter="1"  id="leaderboard-table-Main">
@@ -316,24 +352,24 @@
                     <th></th>
                   </tr>
                   <tr>
-                    <th onclick="sortTable(0, this)"><div class="sticky-header-content">Model<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(1, this)"><div class="sticky-header-content">Rank<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(2, this)"><div class="sticky-header-content">Average<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(3, this)"><div class="sticky-header-content">Date<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(4, this)"><div class="sticky-header-content">3SAT<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(5, this)"><div class="sticky-header-content">Vertex Cover<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(6, this)"><div class="sticky-header-content">Superstring<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(7, this)"><div class="sticky-header-content">QDE<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(8, this)"><div class="sticky-header-content">3DM<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(9, this)"><div class="sticky-header-content">TSP<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(10, this)"><div class="sticky-header-content">Hamiltonian Cycle<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(11, this)"><div class="sticky-header-content">Bin Packing<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(12, this)"><div class="sticky-header-content">3-COL<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(13, this)"><div class="sticky-header-content">Min Sum Square<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(14, this)"><div class="sticky-header-content">Bandwidth<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(15, this)"><div class="sticky-header-content">Max Leaf Span Tree<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(16, this)"><div class="sticky-header-content">Open-source<span class="arrow"></span></div></th>
-                    <th onclick="sortTable(17, this)"><div class="sticky-header-content">Reasoning<span class="arrow"></span></div></th>
+                    <th onclick="sortTable(0, this)" data-sort="none"><div class="sticky-header-content">Model<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(1, this)" data-sort="none"><div class="sticky-header-content">Rank<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(2, this)" data-sort="none" data-sort="none"><div class="sticky-header-content">Average<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(3, this)" data-sort="none"><div class="sticky-header-content">Date<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(4, this)" data-sort="none"><div class="sticky-header-content">3SAT<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(5, this)" data-sort="none"><div class="sticky-header-content">Vertex Cover<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(6, this)" data-sort="none"><div class="sticky-header-content">Superstring<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(7, this)" data-sort="none"><div class="sticky-header-content">QDE<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(8, this)" data-sort="none"><div class="sticky-header-content">3DM<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(9, this)" data-sort="none"><div class="sticky-header-content">TSP<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(10, this)" data-sort="none"><div class="sticky-header-content">Hamiltonian Cycle<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(11, this)" data-sort="none"><div class="sticky-header-content">Bin Packing<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(12, this)" data-sort="none"><div class="sticky-header-content">3-COL<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(13, this)" data-sort="none"><div class="sticky-header-content">Min Sum Square<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(14, this)" data-sort="none"><div class="sticky-header-content">Bandwidth<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(15, this)" data-sort="none"><div class="sticky-header-content">Max Leaf Span Tree<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(16, this)" data-sort="none"><div class="sticky-header-content">Open-source<span class="arrow">↕</span></div></th>
+                    <th onclick="sortTable(17, this)" data-sort="none"><div class="sticky-header-content">Reasoning<span class="arrow">↕</span></div></th>
                     <th><div class="sticky-header-content">Link</div></th>
                   </tr>
                 </thead>
@@ -551,17 +587,6 @@
                 </tbody>
               </table>
             </div>
-            <!-- <p class="text-content">
-              <b>Click the column name to sort.</b>
-              <br>
-              - <span style="color:#4682b4;"><b>Main</b></span> is the leaderboard of full MedXpertQA.
-              <br>
-              - <span style="color:#4682b4;"><b>Text</b></span> is the subset MedXpertQA Text for text-only medical evaluation.
-              <br>
-              - <span style="color:#4682b4;"><b>MM</b></span> is the subset MedXpertQA MM for multimodal medical evaluation.
-              <br><br>
-              If you'd like to submit to the leaderboard, please check <a href="submit.html">this</a> page.
-            </p> -->
           </div>
         </div>
         <!-- Example -->
