@@ -28,7 +28,7 @@
     <style>
         body {
           font-family: "Times New Roman", Times, serif;
-          background: #d8b2b4;
+          background: #ffffff;
           color: #050505;
         }
       
@@ -101,16 +101,26 @@
         }        
 
         function toggleColumn(colIndex, show) {
-          const table = document.getElementById("leaderboard");
-          const rows = table.rows;
-      
-          for (let i = 0; i < rows.length; i++) {
-            const cell = rows[i].cells[colIndex];
-            if (cell) {
-              cell.style.display = show ? "" : "none";
+            const table = document.getElementById("leaderboard");
+          
+            // Hide column in thead
+            const thead = table.querySelector("thead");
+            if (thead) {
+              const ths = thead.rows[0].cells;
+              if (ths[colIndex]) {
+                ths[colIndex].style.display = show ? "" : "none";
+              }
             }
-          }
-        }
+          
+            // Hide column in tbody
+            const rows = table.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+              const cell = row.cells[colIndex];
+              if (cell) {
+                cell.style.display = show ? "" : "none";
+              }
+            });
+          }          
       
         function applyInitialColumnVisibility() {
           document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
@@ -174,7 +184,7 @@
       </script>      
   </head>
   <body>
-      <section style="background-color: #e9d41e">
+      <section style="background-color: #f3c485">
         <div
           class="content-wrapper title-wrapper"
           style="flex-direction: column"
@@ -563,12 +573,21 @@
             <div class="slider">
               <div class="slider-item">
                 <div class="caption">
-                  <h4>NPPC Question, 3SAT Example:</h4>
+                  <h4>3SAT Question:</h4>
                   <p>
-                      ...
+                    3-Satisfiability (3-SAT) Problem Description:  <br />
+                    Input: A set of m clauses - C1 ,C2,...,Cm - over a set of n Boolean valued variables Xn=<x1,x2,...,xn>, such that each clause depends on exactly three distinct variables from Xn. A clause being a Boolean expression of the form yi+yj+yk where each y is of the form x or -x (i.e. negation of x) with x being some variable in Xn. For example if n=4 and m=3 a possible instance could be the (set of) Boolean expressions: C1=(x1+(-x2)+(-x3)); C2=(x2+x3+(-x4)); C3=((-x1)+x3+x4);
+                    Question: Can each variable xi of Xn be assigned a Boolean value alphai in such a way that every clause evaluates to the Boolean result true under the assignment < xi:=alphai:1<=i<=n>? <br />
+                    Examples: Problem: {'variables': [1, 2, 3], 'clauses': [(-2, 3, -1), (-3, -1, -2), (3, -1, 2)]}, {"solution": [False, True, True]}
+                    Problem to Solve: Problem:  <br />
+                    Instruction: <br />
+                    Now please solve the above problem. Reason step by step and present your answer in the "solution" field in the following json format:
+                    ```json
+                    {"solution": "___" }
+                    ``` <br />
                   </p>
                   <h4>Example Answer:</h4> 
-                  <p>...</p>
+                  <p>{'variables': [1, 2, 3], 'clauses': [(-3, -1, 2), (1, -3, -2), (3, -1, 2)]}</p>
                 </div>
               </div>
             </div>
