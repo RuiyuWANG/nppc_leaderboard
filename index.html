@@ -28,8 +28,8 @@
     <style>
         body {
           font-family: "Times New Roman", Times, serif;
-          background: #1a1a1a;
-          color: #fff;
+          background: #d8b2b4;
+          color: #050505;
         }
       
         h1, h2, h3, p, td, th {
@@ -98,40 +98,38 @@
             const text = row.innerText.toLowerCase();
             row.style.display = text.includes(input) ? "" : "none";
           });
-        }
-    
+        }        
+
         function toggleColumn(colIndex, show) {
-            const table = document.getElementById("leaderboard");
-            const rows = table.rows;
-          
-            for (let i = 0; i < rows.length; i++) {
-              const cell = rows[i].cells[colIndex];
-              if (cell) {
-                cell.style.display = show ? "" : "none";
-              }
+          const table = document.getElementById("leaderboard");
+          const rows = table.rows;
+      
+          for (let i = 0; i < rows.length; i++) {
+            const cell = rows[i].cells[colIndex];
+            if (cell) {
+              cell.style.display = show ? "" : "none";
             }
           }
-          
+        }
+      
         function applyInitialColumnVisibility() {
-        document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
+          document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
             const col = parseInt(checkbox.dataset.col);
             toggleColumn(col, checkbox.checked);
-           });
+          });
         }
-        
-        window.onload = applyInitialColumnVisibility;
+      
         document.addEventListener("DOMContentLoaded", () => {
-            applyInitialColumnVisibility();  // Run once on page load
-          
-            document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
-              checkbox.addEventListener("change", () => {
-                const col = parseInt(checkbox.dataset.col);
-                toggleColumn(col, checkbox.checked);
-              });
+          applyInitialColumnVisibility();
+      
+          document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
+            checkbox.addEventListener("change", () => {
+              const col = parseInt(checkbox.dataset.col);
+              toggleColumn(col, checkbox.checked);
             });
           });
-      </script>
-      <script>
+        });
+
         function applyModelFilters() {
           const rows = document.querySelectorAll("#leaderboard tbody tr");
           const openSourceFilters = [];
@@ -176,7 +174,7 @@
       </script>      
   </head>
   <body>
-      <section style="background-color: var(--dark_accent_color)">
+      <section style="background-color: #e9d41e">
         <div
           class="content-wrapper title-wrapper"
           style="flex-direction: column"
@@ -252,17 +250,17 @@
                 </div>
                 <!-- Select Display -->
                 <div class="content-box" style="margin-bottom: 0;">
-                  <div class="column-select" style="padding-bottom: 0px;">
-                    <div>
-                      <h3>Select Columns to Display:</h3>
+                    <div class="column-select" style="padding-bottom: 0px;">
+                      <div>
+                        <h3>Select Columns to Display:</h3>
+                      </div>
+                      <div class="column-select-bottom">
+                        <label><input type="checkbox" class="custom-checkbox" data-col="3" checked> Date</label>
+                        <label><input type="checkbox" class="custom-checkbox" data-col="16" checked> Open-source</label>
+                        <label><input type="checkbox" class="custom-checkbox" data-col="17" checked> Reasoning</label>
+                      </div>
                     </div>
-                    <div class="column-select-bottom">
-                      <label><input type="checkbox" class="custom-checkbox" data-col="3" checked onclick="toggleColumn(3)"> Date</label>
-                      <label><input type="checkbox" class="custom-checkbox" data-col="16" checked onclick="toggleColumn(16)"> Open-source</label>
-                      <label><input type="checkbox" class="custom-checkbox" data-col="17" checked onclick="toggleColumn(17)"> Reasoning</label>
-                    </div>
-                  </div>
-                </div>
+                  </div>                  
               </div>
               <!-- Model Selection -->
               <div class="filter-section-item content-box" style="margin: 0;">
