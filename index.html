@@ -25,6 +25,17 @@
       crossorigin="anonymous"
     />
     <!-- Google tag (gtag.js) -->
+    <style>
+        body {
+          font-family: "Times New Roman", Times, serif;
+          background: #1a1a1a;
+          color: #fff;
+        }
+      
+        h1, h2, h3, p, td, th {
+          font-family: inherit; /* Ensures all elements follow the body font */
+        }
+      </style>      
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-H9XFCMDPNS"
@@ -41,26 +52,26 @@
       <script>
         function sortTable(colIndex, header = null) {
             const table = document.getElementById("leaderboard");
-            const rows = Array.from(table.rows).slice(1); // skip header
+            const tbody = table.querySelector("tbody");
+            const rows = Array.from(tbody.rows);
             const isAsc = !(header.dataset.sort === "asc");
           
-            // Reset all headers
-            const allHeaders = table.querySelectorAll("th");
-            allHeaders.forEach(th => {
+            // Reset arrows and sort state on all headers
+            table.querySelectorAll("th").forEach(th => {
               th.dataset.sort = "none";
               const arrow = th.querySelector(".arrow");
-              if (arrow) arrow.textContent = "↕"; // neutral
+              if (arrow) arrow.textContent = "↕";
             });
           
-            // Update current header sort direction and arrow
+            // Update clicked header's arrow
             header.dataset.sort = isAsc ? "asc" : "desc";
             const arrow = header.querySelector(".arrow");
             if (arrow) arrow.textContent = isAsc ? "▲" : "▼";
           
             // Sort the rows
             rows.sort((a, b) => {
-              let x = a.cells[colIndex].innerText.trim().toLowerCase();
-              let y = b.cells[colIndex].innerText.trim().toLowerCase();
+              let x = a.cells[colIndex]?.textContent.trim().toLowerCase();
+              let y = b.cells[colIndex]?.textContent.trim().toLowerCase();
           
               const xNum = parseFloat(x);
               const yNum = parseFloat(y);
@@ -70,15 +81,14 @@
                 y = yNum;
               }
           
-              return isAsc ? (x > y ? 1 : -1) : (x < y ? 1 : -1);
+              if (x < y) return isAsc ? -1 : 1;
+              if (x > y) return isAsc ? 1 : -1;
+              return 0;
             });
           
-            // Reattach sorted rows
-            const tbody = table.tBodies[0];
+            // Re-append sorted rows
             rows.forEach(row => tbody.appendChild(row));
           }
-          
-          
     
         function searchTable() {
           const input = document.getElementById("searchInput").value.toLowerCase();
@@ -90,29 +100,36 @@
           });
         }
     
-        function toggleColumn(colIndex) {
+        function toggleColumn(colIndex, show) {
             const table = document.getElementById("leaderboard");
             const rows = table.rows;
-        
+          
             for (let i = 0; i < rows.length; i++) {
               const cell = rows[i].cells[colIndex];
               if (cell) {
-                const currentDisplay = window.getComputedStyle(cell).display;
-                cell.style.display = currentDisplay === "none" ? "" : "none";
+                cell.style.display = show ? "" : "none";
               }
             }
           }
-        
+          
         function applyInitialColumnVisibility() {
         document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
             const col = parseInt(checkbox.dataset.col);
-            if (!checkbox.checked) {
-            toggleColumn(col);  // hide column if not checked on load
-            }
-        });
+            toggleColumn(col, checkbox.checked);
+           });
         }
         
         window.onload = applyInitialColumnVisibility;
+        document.addEventListener("DOMContentLoaded", () => {
+            applyInitialColumnVisibility();  // Run once on page load
+          
+            document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
+              checkbox.addEventListener("change", () => {
+                const col = parseInt(checkbox.dataset.col);
+                toggleColumn(col, checkbox.checked);
+              });
+            });
+          });
       </script>
       <script>
         function applyModelFilters() {
@@ -272,7 +289,6 @@
                     </label>
                   </div>
                 </div>
-                
               </div>
             </div>
             <!-- Leaderboard Main -->
@@ -585,11 +601,12 @@
                 and unhackable testbed for LLMs toward artificial general intelligence (AGI).  <br />
                 <b>Read more about NPPC in our <a href="https://arxiv.org/abs/2504.11239", target="_blank">paper</a>!</b>
             </p class="text-content">
+            <br>
             <h3 class="text-title" style="margin-bottom:0.5em">Contact</h3>
-            <p class="text-content">
-                <a href="mailto:chang.yang@connect.polyu.hk">chang.yang@connect.polyu.hk</a>,
+            <p class="text-content"><a href="mailto:chang.yang@connect.polyu.hk">chang.yang@connect.polyu.hk</a>,
                 <a href="mailto:xrwang@smu.edu.sg">xrwang@smu.edu.sg</a>.
-            </p>
+            </p class="text-content">
+            <br>
             <h3 class="text-title" style="margin-bottom:0.5em">Citation</h3>
             <pre id="citation"><div class="btn-pre-copy" onclick="preCopy()">Copy</div><code id="copy-content">@misc{yang2025nondeterministicpolynomialtimeproblemchallenge,
     title={Nondeterministic Polynomial-time Problem Challenge: An Ever-Scaling Reasoning Benchmark for LLMs}, 
