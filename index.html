@@ -103,16 +103,13 @@
         function toggleColumn(colIndex, show) {
             const table = document.getElementById("leaderboard");
           
-            // Hide column in thead
-            const thead = table.querySelector("thead");
-            if (thead) {
-              const ths = thead.rows[0].cells;
-              if (ths[colIndex]) {
-                ths[colIndex].style.display = show ? "" : "none";
-              }
+            // Hide/show header <th>
+            const th = table.querySelector(`thead tr th:nth-child(${colIndex + 1})`);
+            if (th) {
+              th.style.display = show ? "" : "none";
             }
           
-            // Hide column in tbody
+            // Hide/show all cells in this column in <tbody>
             const rows = table.querySelectorAll("tbody tr");
             rows.forEach(row => {
               const cell = row.cells[colIndex];
@@ -120,7 +117,7 @@
                 cell.style.display = show ? "" : "none";
               }
             });
-          }          
+          }              
       
         function applyInitialColumnVisibility() {
           document.querySelectorAll(".custom-checkbox").forEach(checkbox => {
@@ -573,22 +570,37 @@
             <div class="slider">
               <div class="slider-item">
                 <div class="caption">
-                  <h4>3SAT Question:</h4>
-                  <p>
-                    3-Satisfiability (3-SAT) Problem Description:  <br />
-                    Input: A set of m clauses - C1 ,C2,...,Cm - over a set of n Boolean valued variables Xn=<x1,x2,...,xn>, such that each clause depends on exactly three distinct variables from Xn. A clause being a Boolean expression of the form yi+yj+yk where each y is of the form x or -x (i.e. negation of x) with x being some variable in Xn. For example if n=4 and m=3 a possible instance could be the (set of) Boolean expressions: C1=(x1+(-x2)+(-x3)); C2=(x2+x3+(-x4)); C3=((-x1)+x3+x4);
+                  <h4>3-SAT Question:</h4>
+                  <p>3-Satisfiability (3-SAT) Problem Description:  <br />
+                    Input: A set of m clauses - C1 ,C2,...,Cm - over a set of n Boolean valued variables Xn=[x1,x2,...,xn], such that each clause depends on exactly three distinct variables from Xn. A clause being a Boolean expression of the form yi+yj+yk where each y is of the form x or -x (i.e. negation of x) with x being some variable in Xn. For example if n=4 and m=3 a possible instance could be the (set of) Boolean expressions: C1=(x1+(-x2)+(-x3)); C2=(x2+x3+(-x4)); C3=((-x1)+x3+x4);
                     Question: Can each variable xi of Xn be assigned a Boolean value alphai in such a way that every clause evaluates to the Boolean result true under the assignment < xi:=alphai:1<=i<=n>? <br />
-                    Examples: Problem: {'variables': [1, 2, 3], 'clauses': [(-2, 3, -1), (-3, -1, -2), (3, -1, 2)]}, {"solution": [False, True, True]}
-                    Problem to Solve: Problem:  <br />
+                    Examples: Problem: {'variables': [1, 2, 3], 'clauses': [(-2, 3, -1), (-3, -1, -2), (3, -1, 2)]}, {"solution": [False, True, True]} <br />
+                    Problem to Solve: Problem: {'variables': [1, 2, 3], 'clauses': [(-3, -1, 2), (1, -3, -2), (3, -1, 2)]} <br />
                     Instruction: <br />
-                    Now please solve the above problem. Reason step by step and present your answer in the "solution" field in the following json format:
+                    Now please solve the above problem. Reason step by step and present your answer in the "solution" field in the following json format: <br />
                     ```json
                     {"solution": "___" }
                     ``` <br />
                   </p>
                   <h4>Example Answer:</h4> 
-                  <p>{'variables': [1, 2, 3], 'clauses': [(-3, -1, 2), (1, -3, -2), (3, -1, 2)]}</p>
+                  <p>{"solution": [False, False, False]}</p>
                 </div>
+                <div class="caption">
+                    <h4>Vertex Cover Question:</h4>
+                    <p>Vertex Cover Problem Description:  <br />
+                      Input: Input: An n-node undirected graph G(V,E) with node set V and edge set E; a positive integer k with k<=n.
+                      Question: Is there a subset W of V having size at most k and such that for every edge {u,v} in E at least one of u and v belongs to W? <br />
+                      Examples: Problem: {'cover_size': 3, 'graph': {'nodes': [0, 1, 2, 3], 'edges': {(0, 1), (1, 2), (0, 3), (2, 3), (1, 3)}}}, {"solution": [1, 2, 3]} <br />
+                      Problem to Solve: Problem: {'graph': {'nodes': [0, 1, 2, 3], 'edges': {(0, 1), (1, 2), (0, 3), (2, 3), (0, 2), (1, 3)}}} <br />
+                      Instruction: <br />
+                      Now please solve the above problem. Reason step by step and present your answer in the "solution" field in the following json format: <br />
+                      ```json
+                      {"solution": "___" }
+                      ``` <br />
+                    </p>
+                    <h4>Example Answer:</h4> 
+                    <p>{"solution": [0, 2, 3]}</p>
+                  </div>
               </div>
             </div>
           </div>
