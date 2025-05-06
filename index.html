@@ -181,7 +181,27 @@
           filterCheckboxes.forEach(cb => cb.addEventListener("change", applyModelFilters));
           applyModelFilters();  // Run once on load
         });
-      </script>      
+      </script>  
+      <script>
+        const slides = document.querySelectorAll('.slider-item');
+        let current = 0;
+      
+        function showSlide(index) {
+          slides.forEach((s, i) => s.classList.toggle('active', i === index));
+        }
+      
+        document.getElementById('prev_btn').onclick = () => {
+          current = (current - 1 + slides.length) % slides.length;
+          showSlide(current);
+        };
+      
+        document.getElementById('next_btn').onclick = () => {
+          current = (current + 1) % slides.length;
+          showSlide(current);
+        };
+      
+        showSlide(current); // initialize
+      </script>          
   </head>
   <body>
       <section style="background-color: #f3c485">
@@ -601,7 +621,7 @@
                     </p>
                     <h4>Example Answer:</h4> 
                     <p>{"solution": [0, 2, 3]}</p>
-                  </div>
+                </div>
               </div>
             </div>
           </div>
