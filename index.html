@@ -187,21 +187,24 @@
         let current = 0;
       
         function showSlide(index) {
-          slides.forEach((s, i) => s.classList.toggle('active', i === index));
+          slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+          });
         }
       
-        document.getElementById('prev_btn').onclick = () => {
+        document.getElementById('prev_btn').addEventListener('click', () => {
           current = (current - 1 + slides.length) % slides.length;
           showSlide(current);
-        };
+        });
       
-        document.getElementById('next_btn').onclick = () => {
+        document.getElementById('next_btn').addEventListener('click', () => {
           current = (current + 1) % slides.length;
           showSlide(current);
-        };
+        });
       
         showSlide(current); // initialize
-      </script>          
+      </script>
+            
   </head>
   <body>
       <section style="background-color: #f3c485">
@@ -591,7 +594,7 @@
                 <a class="slide-btn" id="next_btn"><i class="fa-solid fa-arrow-right"></i></a>
             </div>
             <div class="slider">
-              <div class="slider-item">
+              <div class="slider-item active">
                 <div class="caption">
                   <h4>3-SAT Question:</h4><p>3-Satisfiability (3-SAT) Problem Description:  <br />
                     Input: A set of m clauses - C1 ,C2,...,Cm - over a set of n Boolean valued variables Xn=[x1,x2,...,xn], such that each clause depends on exactly three distinct variables from Xn. A clause being a Boolean expression of the form yi+yj+yk where each y is of the form x or -x (i.e. negation of x) with x being some variable in Xn. For example if n=4 and m=3 a possible instance could be the (set of) Boolean expressions: C1=(x1+(-x2)+(-x3)); C2=(x2+x3+(-x4)); C3=((-x1)+x3+x4);
