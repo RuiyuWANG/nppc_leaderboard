@@ -90,19 +90,65 @@
         }
       </style>
       <script>
-        function sortTable(n) {
+        function sortTable(colIndex, header = null) {
           const table = document.getElementById("leaderboard");
-          let rows = Array.from(table.rows).slice(1);
-          const dir = table.dataset.sortDir === "asc" ? "desc" : "asc";
-          table.dataset.sortDir = dir;
-          rows.sort((a, b) => {
-            const aText = a.cells[n].innerText;
-            const bText = b.cells[n].innerText;
-            return dir === "asc"
-              ? aText.localeCompare(bText, undefined, { numeric: true })
-              : bText.localeCompare(aText, undefined, { numeric: true });
+          let switching = true;
+          let dir = "asc";
+          let rows = table.rows;
+          if (header && header.dataset.sort === "asc") {
+            dir = "desc";
+            header.dataset.sort = "desc";
+          } else if (header) {
+            header.dataset.sort = "asc";
+          }
+    
+          while (switching) {
+            switching = false;
+            let shouldSwitch;
+            for (let i = 1; i < rows.length - 1; i++) {
+              let x = rows[i].getElementsByTagName("td")[colIndex];
+              let y = rows[i + 1].getElementsByTagName("td")[colIndex];
+              let xVal = x.innerText.toLowerCase();
+              let yVal = y.innerText.toLowerCase();
+    
+              if (!isNaN(xVal) && !isNaN(yVal)) {
+                xVal = parseFloat(xVal);
+                yVal = parseFloat(yVal);
+              }
+    
+              if ((dir === "asc" && xVal > yVal) || (dir === "desc" && xVal < yVal)) {
+                shouldSwitch = true;
+                break;
+              }
+            }
+    
+            if (shouldSwitch) {
+              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+              switching = true;
+            }
+          }
+        }
+    
+        function searchTable() {
+          const input = document.getElementById("searchInput").value.toLowerCase();
+          const rows = document.querySelectorAll("#leaderboard tbody tr");
+    
+          rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(input) ? "" : "none";
           });
-          for (const row of rows) table.appendChild(row);
+        }
+    
+        function toggleColumn(colIndex) {
+          const table = document.getElementById("leaderboard");
+          const rows = table.rows;
+    
+          for (let i = 0; i < rows.length; i++) {
+            const cell = rows[i].cells[colIndex];
+            if (cell) {
+              cell.style.display = cell.style.display === "none" ? "" : "none";
+            }
+          }
         }
       </script>
   </head>
@@ -175,12 +221,17 @@
               <div class="filter-section-item" style="margin: 0;">
                 <!-- Searching -->
                 <div class="search-section content-box" style="margin: 0;">
-                  <div class="search-section-item">
+                  <!-- <div class="search-section-item">
                     <h3>Search:</h3>
                   </div>
                   <div class="search-section-item">
                     <input type="text" id="searchInput" placeholder="">
                     <button class="btn-radius" type="button" onclick="searchTable()">Search</button>
+                  </div> -->
+                  <div class="search-section content-box">
+                    <h3>Search:</h3>
+                    <input type="text" id="searchInput" placeholder="Type to search...">
+                    <button class="btn-radius" onclick="searchTable()">Search</button>
                   </div>
                 </div>
                 <!-- Select Display -->
@@ -190,7 +241,7 @@
                       <h3>Select Columns to Display:</h3>
                     </div>
                     <div class="column-select-bottom">
-                      <label for="date">
+                      <!-- <label for="date">
                         <input type="checkbox" class="custom-checkbox" id="date" checked onclick="toggleColumn(4)">Date
                       </label>
                       <label for="open - source">
@@ -198,7 +249,10 @@
                       </label>
                       <label for="reasoning">
                         <input type="checkbox" class="custom-checkbox" id="reasoning" checked onclick="toggleColumn(-3)">Reasoning
-                      </label>
+                      </label> -->
+                      <label><input type="checkbox" class="custom-checkbox" data-col="3" checked onclick="toggleColumn(3)"> Date</label>
+                      <label><input type="checkbox" class="custom-checkbox" data-col="16" checked onclick="toggleColumn(16)"> Open-source</label>
+                      <label><input type="checkbox" class="custom-checkbox" data-col="17" checked onclick="toggleColumn(17)"> Reasoning</label>
                     </div>
                   </div>
                 </div>
