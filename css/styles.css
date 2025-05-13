@@ -235,7 +235,8 @@ button {
     padding: 0em 0em;
     margin: 0.2em 0.5em;
     transition: background-color 0.1s linear, color 0.1s linear;
-    color: var(--accent_color);
+/*     color: var(--accent_color); */
+    color: var(--pink);
     background-color: white;
     &.multimodal {
       color: var(--slate_gray);
