@@ -131,7 +131,7 @@ body {
 }
 
 .light-pink-link, .light-pink-link:visited {
-  color: var(--lightpink); /* Light blue color */
+  color: var(--pink); /* Light blue color */
   text-decoration: none; /* Optional: Removes underline from links */
 }
 
