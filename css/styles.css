@@ -5,6 +5,7 @@
   --green: #699f56;
   --forest: #032f14;
   --blue: #34566f;
+  --pink: #c72041;
   --grey: #40434b;
   --grey2: #d8d8d8;
   --red: #aa4926;
@@ -152,7 +153,7 @@ h1.logo {
   align-items: center;
   justify-content: center;
   padding: 2em 5em;
-  color: white;
+  color: black;
 }
 
 .main-container {
@@ -177,7 +178,7 @@ h2.text-title {
 }
 
 .text-content a {
-  color: var(--blue);
+  color: var(--pink);
   text-decoration: underline;
 }
 
