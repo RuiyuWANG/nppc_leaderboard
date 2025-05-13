@@ -6,6 +6,7 @@
   --forest: #032f14;
   --blue: #34566f;
   --pink: #c72041;
+  --lightpink: #d4667b;
   --grey: #40434b;
   --grey2: #d8d8d8;
   --red: #aa4926;
@@ -126,6 +127,11 @@ body {
 
 .light-blue-link, .light-blue-link:visited {
   color: var(--accent_color); /* Light blue color */
+  text-decoration: none; /* Optional: Removes underline from links */
+}
+
+.light-pink-link, .light-pink-link:visited {
+  color: var(--lightpink); /* Light blue color */
   text-decoration: none; /* Optional: Removes underline from links */
 }
 
