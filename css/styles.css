@@ -6,13 +6,13 @@
   --forest: #032f14;
   --blue: #34566f;
   --pink: #c72041;
-  --yellow: #fcc42b;
+  --yellow: #ca7128;
   --lightpink: #d4667b;
   --grey: #40434b;
   --grey2: #d8d8d8;
   --red: #aa4926;
   --orange: #ff7040;
-  --orange2: #f8a488;
+  --orange2: #ac9d98;
   --lightgreen: #C2D8B9;
   --darkorange: #d54718;
   --accent_color: #4682b4;
@@ -314,7 +314,7 @@ ul.tab {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border: 2px solid var(--accent_color);
+  border: 2px solid var(--yellow);
   border-bottom: 0;
   background-color: #f1f1f1;
 }
