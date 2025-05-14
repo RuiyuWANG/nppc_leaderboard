@@ -213,23 +213,18 @@ h2.text-title {
 
 #citation {
   position: relative;
-  background-color: var(--orange2);
-  border: 3px solid var(--yellow);
+  background-color: #f7f7f7;
+  border: 2px solid #efefef;
   padding: 15px;
   overflow-x: auto;
-  border-radius: 0.5em;
-  margin: 0;
+  border-radius: 0.35em;
+  margin: 0 0.25em;
 }
 
-.pre-wrapper {
-  position: relative;
-  display: inline-block; /* Adjust if you want full width */
-}
-
-.btn-pre-copy {
+.btn-pre-copy{
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 0px;
+  right: 0px;
   font-size: 12px;
   color: #ffffff;
   background-color: #9c9c9c;
@@ -237,11 +232,11 @@ h2.text-title {
   text-align: center;
   padding: 2px 0;
   z-index: 20;
+  margin: 8px;
   border-radius: 4px;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.05)
 }
-
 
 code {
   background: #f7f7f7;
@@ -253,7 +248,7 @@ code {
   padding: 0.25em 0.65em;
 }
 
-pre {
+/* pre {
   -webkit-overflow-scrolling: touch;
   font-family: "Courier New", monospace;
   font-size: 0.9em;
@@ -265,7 +260,7 @@ pre code {
   line-height: 1.75em;
   padding: 1em 1.5em;
   overflow-x: auto;
-}
+} */
 
 button {
   cursor: pointer;
