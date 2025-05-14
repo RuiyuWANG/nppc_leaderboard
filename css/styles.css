@@ -169,21 +169,21 @@ h1.logo {
 }
 
 h2.text-title {
-  font-size: 1.33em;
+  font-size: 1.5em;
   font-weight: bold;
   color: var(--black);
   padding: 0.2em 0;
   margin-bottom: 0.3em;
 }
 
-
 .text-content {
   font-size: 0.95em;
   line-height: 1.6667em;
   font-weight: 500;
-  width: 0.8;
+  width: 80%;
   text-align: justify;
   padding: 1em 0;
+  margin: 0 auto;
 }
 
 .text-content a {
