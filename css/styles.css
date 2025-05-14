@@ -181,7 +181,8 @@ h2.text-title {
   font-size: 0.95em;
   line-height: 1.6667em;
   font-weight: 500;
-  text-align: left;
+  width: 0.8;
+  text-align: justify;
   padding: 1em 0;
 }
 
