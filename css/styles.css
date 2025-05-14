@@ -169,7 +169,7 @@ h1.logo {
 }
 
 h2.text-title {
-  font-size: 1.7em;
+  font-size: 1.55em;
   font-weight: bold;
   color: var(--black);
   margin: 0;
@@ -214,7 +214,7 @@ h2.text-title {
 #citation {
   position: relative;
   background-color: var(--orange2);
-  border: 4px solid var(--yellow);
+  border: 3px solid var(--yellow);
   padding: 15px;
   overflow-x: auto;
   border-radius: 0.5em;
@@ -663,8 +663,8 @@ th.desc .arrow::after {
 }
 
 .custom-checkbox:checked {
-  background-color: yellow;
-  border-color: yellow
+  background-color: var(--pink);
+  border-color: var(--pink)
 }
 
 .custom-checkbox:checked::after {
