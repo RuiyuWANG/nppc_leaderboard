@@ -221,7 +221,7 @@ h2.text-title {
   margin: 0;
 }
 
-.btn-pre-copy{
+/* .btn-pre-copy{
   position: absolute;
   top: 0px;
   right: 0px;
@@ -236,13 +236,37 @@ h2.text-title {
   border-radius: 4px;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.05)
-}
+} */
 
-code {
-  font-family: "Courier New", Courier, monospace; /* Monospace font */
-  font-size: 14px;           /* Font size */
+/* code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
   font-weight: 800;
   color: #ffffff;
+} */
+
+code {
+  background: #f7f7f7;
+  border-radius: 0.35em;
+  border: solid 2px #efefef;
+  font-family: "Courier New", monospace;
+  font-size: 0.9em;
+  margin: 0 0.25em;
+  padding: 0.25em 0.65em;
+}
+
+pre {
+  -webkit-overflow-scrolling: touch;
+  font-family: "Courier New", monospace;
+  font-size: 0.9em;
+  margin: 0 0 2em 0;
+}
+
+pre code {
+  display: block;
+  line-height: 1.75em;
+  padding: 1em 1.5em;
+  overflow-x: auto;
 }
 
 button {
@@ -353,7 +377,7 @@ tr {
   font-size: 0.8em;
   padding: 0.2em 0.6em;
   color: white;
-  background-color: var(--yellow);
+  background-color: var(--grey);
   border-radius: 0.5em;
   text-align: center;
 }
