@@ -6,11 +6,13 @@
   --forest: #032f14;
   --blue: #34566f;
   --pink: #c72041;
+  --yellow: #fcc42b;
   --lightpink: #d4667b;
   --grey: #40434b;
   --grey2: #d8d8d8;
   --red: #aa4926;
   --orange: #ff7040;
+  --orange2: #f8a488;
   --lightgreen: #C2D8B9;
   --darkorange: #d54718;
   --accent_color: #4682b4;
@@ -194,8 +196,8 @@ h2.text-title {
 
 #citation {
   position: relative;
-  background-color: var(--grey);
-  border: 2px solid var(--accent_color);
+  background-color: var(--orange2);
+  border: 2px solid var(--yellow);
   padding: 15px;
   overflow-x: auto;
   border-radius: 0.5em;
@@ -334,7 +336,7 @@ tr {
   font-size: 0.8em;
   padding: 0.2em 0.6em;
   color: white;
-  background-color: var(--grey);
+  background-color: var(--orange2);
   border-radius: 0.5em;
   text-align: center;
 }
@@ -344,7 +346,7 @@ tr {
 }
 
 .footer-container {
-  background-color: var(--accent_color);
+  background-color: var(--yellow);
   padding: 0.75em 0;
   position: fixed;
   bottom: 0;
