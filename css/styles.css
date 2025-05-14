@@ -663,8 +663,8 @@ th.desc .arrow::after {
 }
 
 .custom-checkbox:checked {
-  background-color: #3273F6; /* 新的蓝色背景 */
-  border-color: #3273F6; /* 新的蓝色边框 */
+  background-color: yellow;
+  border-color: yellow
 }
 
 .custom-checkbox:checked::after {
@@ -702,7 +702,7 @@ th.desc .arrow::after {
   padding: 3px;
 }
 .btn-radius {
-  background-color: darkgrey;
+  background-color: var(--grey2);
   border: 1px solid #000000;
   border-radius: 4px;
 }
