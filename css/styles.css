@@ -363,16 +363,20 @@ ul.tab li a:focus, .active {background-color: #ccc;}
   border-top: none;
 }
 
-/* MARK: Table Styling Code  */
-table,
-td,
-th,
-tr {
-  margin: 0;
-  padding: 0;
-  border-collapse: collapse;
+/* MARK: Table Styling Code */
+table {
+  border-collapse: separate;   /* required for border-radius */
+  border-spacing: 0;           /* remove spacing between cells */
+  border-radius: 0.5em;        /* optional, for safety */
+  overflow: hidden;            /* clip inner content if needed */
 }
 
+td,
+th {
+  padding: 0.75em 1em;
+}
+
+/* Round only the outer corners */
 table tr:first-child th:first-child {
   border-top-left-radius: 0.5em;
 }
