@@ -542,7 +542,7 @@ tr {
 
 .slider-item {
   display: none;
-  padding: 20px;
+  padding: 0px;
   background: #fff;
   color: #000;
   border-radius: 8px;
